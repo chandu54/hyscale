@@ -53,34 +53,6 @@ jobs:
       with:
         image-name: hyscale:latest
 
-    - name: Publish Images and Hyscale Binary for DEV
-      if: github.ref == 'refs/heads/master'
-      run: |
-          ./scripts/publish_artifacts.sh
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.HYS_DEV_AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.HYS_DEV_AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'us-west-2'
-        AWS_S3_BUCKET: ${{ secrets.HYS_DEV_AWS_S3_BUCKET }}
-        DOCKER_USERNAME: ${{ secrets.HYS_DEV_DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.HYS_DEV_DOCKER_PASSWORD }}
-        DOCKER_REPO: 'hyscaledev'
-
-    - name: Publish Images and Hyscale Binary for Release
-      run: |
-          if [[ "x`echo ${GITHUB_REF}`" == *"release/HyScale"* ]]
-          then
-            ./scripts/publish_artifacts.sh
-          fi
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.HYS_STABLE_AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.HYS_STABLE_AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'us-west-2'
-        AWS_S3_BUCKET: ${{ secrets.HYS_STABLE_AWS_S3_BUCKET }}
-        DOCKER_USERNAME: ${{ secrets.HYS_STABLE_DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.HYS_STABLE_DOCKER_PASSWORD }}
-        DOCKER_REPO: 'hyscale'
-
     #If branch is release, the upload the hyscale binary to DEV latest
     - name: Release Pointing to the Latest of DEV
       run: |
