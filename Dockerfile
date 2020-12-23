@@ -18,7 +18,7 @@ RUN apt-get install gpg -y \
 COPY . .
 RUN mkdir -p ~/.gnupg/ && echo "$GPG_KEY_ENV"| base64 --decode > ~/.gnupg/private.key \
     && gpg --batch --import ~/.gnupg/private.key \
-    && mvn $MAVEN_EXEC_ENV
+    && mvn clean install -DskipTests=true
 
 FROM openjdk:11.0.8-jre-slim-buster
 ENV DOCKERVERSION=18.06.2-ce
