@@ -1,9 +1,9 @@
-FROM maven:3.6.0-jdk-11 as base
+FROM maven:3.6.3-jdk-11 as base
 ARG GPG_KEY=GPG_KEY_TO_PUBLISH_JAR
 ARG MAVEN_USER=MAVEN_USER_TO_PUBLISH_JAR
 ARG MAVEN_PASS=MAVEN_PASSWORD_TO_PUBLISH_JAR
 ARG GPG_PASS=GPG_PASSPHRASE_TO_PUBLISH_JAR
-ARG MAVEN_EXEC="clean install -DskipTests=true"
+ARG MAVEN_EXEC="clean install"
 ENV server-id=ossrh
 ENV server-username=$MAVEN_USER
 ENV server-password=$MAVEN_PASS
@@ -18,9 +18,9 @@ RUN apt-get install gpg -y \
 COPY . .
 RUN mkdir -p ~/.gnupg/ && echo "$GPG_KEY_ENV"| base64 --decode > ~/.gnupg/private.key \
     && gpg --batch --import ~/.gnupg/private.key \
-    && mvn clean install -DskipTests=true
+    && mvn $MAVEN_EXEC_ENV
 
-FROM openjdk:11.0.8-jre-slim-buster
+FROM openjdk:11.0.9.1-jre-slim-buster
 ENV DOCKERVERSION=18.06.2-ce
 RUN apt update \
     && apt-get install -y --no-install-recommends wget \
